@@ -1,0 +1,34 @@
+# {{ ansible_managed }}
+# https://www.digitalocean.com/community/tools/nginx?domains.0.server.domain=blogupper.aws.andreazi.com&domains.0.server.path=%2Fsrv%2Fwww%2Fwordpress&domains.0.server.documentRoot=&domains.0.server.redirectSubdomains=false&domains.0.server.listenIpv6=&domains.0.https.https=false&domains.0.php.wordPressRules=true&domains.0.logging.accessLogPath=%2Fvar%2Flog%2Fnginx%2Fwordpress.aws.andreazi.com_access.log&domains.0.logging.errorLogPath=%2Fvar%2Flog%2Fnginx%2Fwordpress.aws.andreazi.com_error.log&global.app.lang=ptBR
+
+server {
+    listen      80;
+    server_name {{ domain }};
+    set         $base /usr/share/nginx/{{ domain }}/wordpress;
+    root        $base;
+
+    # security
+    include     nginxconfig.io/security.conf;
+
+    # logging
+    access_log  /var/log/nginx/{{ domain }}_access.log combined buffer=512k flush=1m;
+    error_log   /var/log/nginx/{{ domain }}_error.log warn;
+
+    # index.php
+    index       index.php;
+
+    # index.php fallback
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    # additional config
+    include nginxconfig.io/general.conf;
+    include nginxconfig.io/{{ domain }}.wordpress.conf;
+
+    # handle .php
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php-fpm/www.sock;
+        include      nginxconfig.io/php_fastcgi.conf;
+    }
+}

@@ -1,0 +1,4 @@
+---
+package: "nginx"
+nginx_dir: "/etc/nginx"
+root_account: "root"
