@@ -1,0 +1,20 @@
+---
+- name: "Instalando php8.2 e suas dependencias"
+  ansible.builtin.dnf:
+    name:
+      - ghostscript
+      - php8.2
+      - php8.2-bcmath
+      - php8.2-fpm
+      - php8.2-intl
+      - php8.2-mbstring
+      - php8.2-mysqlnd
+      - php8.2-xml
+      - php8.2-zip
+    state: present
+
+- name: "Habilitando php8.2 para iniciar com o sistema"
+  ansible.builtin.systemd_service:
+    name: '{{ fpm }}'
+    state: started
+    enabled: true
