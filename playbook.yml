@@ -1,0 +1,9 @@
+---
+- name: "Playbook para instalacao e configuracao do Wordpress"
+  hosts: "wordpress"
+  become: true
+
+  roles:
+    - php
+    - wordpress
+    - nginx

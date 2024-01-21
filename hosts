@@ -1,0 +1,2 @@
+[wordpress]
+amazonlinux ansible_host=44.221.47.36 ansible_user=ec2-user domain=blogupper.aws.andreazi.com database=wordpress bd_username=admin bd_password=7KjjwexCffp2rIP6a52z bd_endpoint=blogupper-wordpress.c58o8iumilxt.us-east-1.rds.amazonaws.com
