@@ -1,0 +1,4 @@
+---
+tar_file: "latest.tar.gz"
+root_account: "root"
+default_html: "/usr/share/nginx"
