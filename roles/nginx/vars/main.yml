@@ -1,4 +1,4 @@
 ---
-package: "nginx"
+nginx_package: "nginx"
 nginx_dir: "/etc/nginx"
-root_account: "root"
+nginx_root_account: "root"

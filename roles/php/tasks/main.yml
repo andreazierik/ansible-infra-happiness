@@ -15,6 +15,6 @@
 
 - name: "Habilitando php8.2 para iniciar com o sistema"
   ansible.builtin.systemd_service:
-    name: '{{ fpm }}'
+    name: '{{ php_fpm }}'
     state: started
     enabled: true

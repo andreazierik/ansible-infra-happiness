@@ -1,2 +1,2 @@
 ---
-fpm: "php-fpm"
+php_fpm: "php-fpm"

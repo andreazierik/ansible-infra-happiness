@@ -1,12 +1,12 @@
 ---
 - name: "Instalando Nginx"
   ansible.builtin.dnf:
-    name: '{{ package }}'
+    name: '{{ nginx_package }}'
     state: present
 
 - name: "Habiliando Nginx na inicializacao"
   ansible.builtin.systemd_service:
-    name: '{{ package }}'
+    name: '{{ nginx_package }}'
     state: started
     enabled: true
 
@@ -14,41 +14,41 @@
   ansible.builtin.template:
     src: "nginx.conf.j2"
     dest: '{{ nginx_dir }}/nginx.conf'
-    owner: '{{ root_account }}'
-    group: '{{ root_account }}'
+    owner: '{{ nginx_root_account }}'
+    group: '{{ nginx_root_account }}'
     mode: '0644'
   notify:
-   - Restart nginx
+    - Restart nginx
 
 - name: "Alterando criando vhost pro dominio"
   ansible.builtin.template:
     src: "wordpress-vhost.j2"
     dest: '{{ nginx_dir }}/conf.d/{{ domain }}.conf'
-    owner: '{{ root_account }}'
-    group: '{{ root_account }}'
+    owner: '{{ nginx_root_account }}'
+    group: '{{ nginx_root_account }}'
     mode: '0644'
   notify:
-   - Restart nginx
+    - Restart nginx
 
 - name: "Criando pasta nginxconfig.io"
   ansible.builtin.file:
     name: '{{ nginx_dir }}/nginxconfig.io'
     state: "directory"
-    owner: '{{ root_account }}'
-    group: '{{ root_account }}'
+    owner: '{{ nginx_root_account }}'
+    group: '{{ nginx_root_account }}'
     mode: '0644'
 
 - name: "Configuracoes adicionais"
   ansible.builtin.template:
     src: "{{ item.origem }}"
     dest: '{{ nginx_dir }}/nginxconfig.io/{{ item.destino }}.conf'
-    owner: '{{ root_account }}'
-    group: '{{ root_account }}'
+    owner: '{{ nginx_root_account }}'
+    group: '{{ nginx_root_account }}'
     mode: '0644'
   loop:
-   - { origem: 'wordpress.conf.j2', destino: '{{ domain }}.wordpress'}
-   - { origem: 'security.conf.j2', destino: 'security'}
-   - { origem: 'general.conf.j2', destino: 'general'}
-   - { origem: 'php_fastcgi.conf.j2', destino: 'php_fastcgi'}
+    - { origem: 'wordpress.conf.j2', destino: '{{ domain }}.wordpress'}
+    - { origem: 'security.conf.j2', destino: 'security'}
+    - { origem: 'general.conf.j2', destino: 'general'}
+    - { origem: 'php_fastcgi.conf.j2', destino: 'php_fastcgi'}
   notify:
-   - Restart nginx
+    - Restart nginx
