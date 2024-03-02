@@ -1,9 +1,8 @@
 ---
-- name: "Playbook para instalacao e configuracao do Wordpress"
-  hosts: "wordpress"
+- name: "Preparando o ambiente para disponibilizar a aplicacao financeira"
+  hosts: "aplicacao"
   become: true
 
   roles:
     - php
-    - wordpress
     - nginx

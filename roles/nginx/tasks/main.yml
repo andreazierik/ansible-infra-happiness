@@ -20,9 +20,9 @@
   notify:
     - Restart nginx
 
-- name: "Alterando criando vhost pro dominio"
+- name: "Criando vhost pro dominio"
   ansible.builtin.template:
-    src: "wordpress-vhost.j2"
+    src: "aplicacao-vhost.j2"
     dest: '{{ nginx_dir }}/conf.d/{{ domain }}.conf'
     owner: '{{ nginx_root_account }}'
     group: '{{ nginx_root_account }}'
@@ -46,9 +46,16 @@
     group: '{{ nginx_root_account }}'
     mode: '0644'
   loop:
-    - { origem: 'wordpress.conf.j2', destino: '{{ domain }}.wordpress'}
-    - { origem: 'security.conf.j2', destino: 'security'}
-    - { origem: 'general.conf.j2', destino: 'general'}
-    - { origem: 'php_fastcgi.conf.j2', destino: 'php_fastcgi'}
+    - { origem: 'security.conf.j2', destino: 'security' }
+    - { origem: 'general.conf.j2', destino: 'general' }
+    - { origem: 'php_fastcgi.conf.j2', destino: 'php_fastcgi' }
   notify:
     - Restart nginx
+
+- name: "Criando pasta da aplicacao"
+  ansible.builtin.file:
+    name: '{{ nginx_sites_dir }}/{{ domain }}'
+    state: "directory"
+    owner: '{{ nginx_root_account }}'
+    group: '{{ nginx_root_account }}'
+    mode: '0644'

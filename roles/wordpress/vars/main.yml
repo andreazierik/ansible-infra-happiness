@@ -1,4 +1,0 @@
----
-wordpress_tar_file: "latest.tar.gz"
-wordpress_root_account: "root"
-wordpress_default_html: "/usr/share/nginx"

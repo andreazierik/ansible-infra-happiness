@@ -1,0 +1,38 @@
+# {{ ansible_managed }}
+# https://www.digitalocean.com/community/tools/nginx?domains.0.server.domain=aplicacao.aws.andreazi.com&domains.0.server.path=%2Fsrv%2Fwww%2Faplicacao.aws.andreazi.com&domains.0.server.documentRoot=&domains.0.server.redirectSubdomains=false&domains.0.server.listenIpv6=&domains.0.https.https=false&domains.0.php.phpServer=%2Fvar%2Frun%2Fphp%2Fphp8.2-fpm.sock&domains.0.logging.accessLogPath=%2Fvar%2Flog%2Fnginx%2Faplicacao.aws.andreazi.com_access.log&domains.0.logging.redirectAccessLog=true&domains.0.logging.errorLogPath=%2Fvar%2Flog%2Fnginx%2Faplicacao.aws.andreazi.com_error.log&domains.0.logging.redirectErrorLog=true&domains.0.restrict.patchMethod=true&domains.0.restrict.deleteMethod=true&domains.0.restrict.headMethod=true&domains.0.restrict.connectMethod=true&domains.0.restrict.optionsMethod=true&domains.0.restrict.traceMethod=true&global.app.lang=ptBR
+
+server {
+    listen      80;
+    server_name {{ domain }}.com;
+    set         $base /srv/www/{{ domain }}.com;
+    root        $base;
+
+    # security
+    include     nginxconfig.io/security.conf;
+
+    # restrict methods
+    if ($request_method !~ ^(GET|POST|PUT)$) {
+        return '405';
+    }
+
+    # logging
+    access_log /var/log/nginx/{{ domain }}.com_access.log combined buffer=512k flush=1m;
+    error_log  /var/log/nginx/{{ domain }}.com_error.log warn;
+
+    # index.php
+    index      index.php;
+
+    # index.php fallback
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    # additional config
+    include nginxconfig.io/general.conf;
+
+    # handle .php
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+        include      nginxconfig.io/php_fastcgi.conf;
+    }
+}
